@@ -11,7 +11,7 @@ import SinglePost from "./singlePost/SinglePost";
 
 
 function App() {
-  const user = false
+  const user = true
   return (
     <Router>
       <TopBar />

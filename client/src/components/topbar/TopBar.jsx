@@ -3,7 +3,7 @@ import topimg from "./pexels-ian-g-13464606.jpg";
 import { Link } from "react-router-dom";
 
 const TopBar = () => {
-  const user = false;
+  const user = true;
   return (
     <div className="top">
       <div className="topLeft">

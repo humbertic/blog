@@ -7,10 +7,15 @@ const userRoute = require("./routes/users")
 const postRoute = require("./routes/posts")
 const categoryRoute = require("./routes/categories")
 const multer = require("multer")
+const cors = require("cors");
+app.use(cors());
+
 
 
 dotenv.config()
 app.use(express.json())
+
+
 
 
 mongoose.connect(process.env.MONGO_URL, {
@@ -43,3 +48,5 @@ app.use("/api/categories", categoryRoute)
 app.listen("5000", () => {
   console.log("Backend is running.")
 })
+
+
