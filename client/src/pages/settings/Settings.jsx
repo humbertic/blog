@@ -1,16 +1,16 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Sidebar from "../../components/sidebar/Sidebar";
 import "./settings.css";
 import { Context } from "../../contex/Context";
-import axios from "axios"
+import axios from "axios";
 
 const Settings = () => {
   const [file, setFile] = useState(null);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [success, setSucces] = useState(false);
   const { user } = useContext(Context);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,12 +28,12 @@ const Settings = () => {
       updateUser.profilePic = filename;
 
       try {
-        await axios.put("/users");
+        await axios.post("upload", data);
       } catch (err) {}
     }
     try {
-      const res = await axios.post("/posts", newPost);
-      window.location.replace("/post/" + res.data._id);
+      await axios.put("/users/" + user._id, updateUser);
+      setSucces(true);
     } catch (err) {}
   };
   return (
@@ -43,25 +43,50 @@ const Settings = () => {
           <span className="settingsUpdateTitle">Update Your Account</span>
           <span className="settingsDeleteTitle">Delete Account</span>
         </div>
-        <form className="settingsForm">
+        <form className="settingsForm" onSubmit={handleSubmit}>
           <label>Profile Picture</label>
           <div className="settingsPP">
             <img
-              src={user.profilePic}
+              src={file ? URL.createObjectURL(file) : user.profilePic}
               alt=""
             />
             <label htmlFor="fileInput">
               <i className="settingsPPIcon fa-regular fa-circle-user"></i>
             </label>
-            <input type="file" id="fileInput" style={{ display: "none" }} />
+            <input
+              type="file"
+              id="fileInput"
+              style={{ display: "none" }}
+              onChange={(e) => setFile(e.target.files[0])}
+            />
           </div>
           <label>Username</label>
-          <input type="email" placeholder="Safak" />
+          <input
+            type="text"
+            placeholder={user.username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
           <label>Email</label>
-          <input type="text" placeholder="safak@gmail.com" />
+          <input
+            type="email"
+            placeholder={user.email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
           <label>Password</label>
-          <input type="password" />
-          <button className="settingsSubmit">Update</button>
+          <input
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button className="settingsSubmit" type="submit">
+            Update
+          </button>
+          {success && (
+            <span
+              style={{ color: "teal", textAlign: "center", marginTop: "20px" }}
+            >
+              Profile has been update...
+            </span>
+          )}
         </form>
       </div>
       <Sidebar />
