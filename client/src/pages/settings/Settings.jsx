@@ -1,7 +1,41 @@
+import { useContext } from "react";
 import Sidebar from "../../components/sidebar/Sidebar";
 import "./settings.css";
+import { Context } from "../../contex/Context";
+import axios from "axios"
 
 const Settings = () => {
+  const [file, setFile] = useState(null);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { user } = useContext(Context);
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const updateUser = {
+      userId: user._id,
+      username,
+      email,
+      password,
+    };
+    if (file) {
+      const data = new FormData();
+      const filename = Date.now() + file.name;
+      data.append("name", filename);
+      data.append("file", file);
+      updateUser.profilePic = filename;
+
+      try {
+        await axios.put("/users");
+      } catch (err) {}
+    }
+    try {
+      const res = await axios.post("/posts", newPost);
+      window.location.replace("/post/" + res.data._id);
+    } catch (err) {}
+  };
   return (
     <div className="settings">
       <div className="settingsWrapper">
@@ -13,7 +47,7 @@ const Settings = () => {
           <label>Profile Picture</label>
           <div className="settingsPP">
             <img
-              src="https://images.pexels.com/photos/12305125/pexels-photo-12305125.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+              src={user.profilePic}
               alt=""
             />
             <label htmlFor="fileInput">

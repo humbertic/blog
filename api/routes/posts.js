@@ -10,7 +10,6 @@ router.post("/", async (req, res) => {
         res.status(200).json(savedPost)
     } catch (err) {
         res.status(500).json(err)
-
     }
 
 });
@@ -43,7 +42,7 @@ router.delete("/:id", async (req, res) => {
         if (!post) {
             return res.status(404).json("Post not found");
         }
-        if (post.userName === req.body.userName) {
+        if (post.userName === req.query.username) {
             await Post.findByIdAndDelete(req.params.id);
             res.status(200).json("Post has been deleted");
         } else {
